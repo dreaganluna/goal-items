@@ -17,6 +17,7 @@ exports.Item = Class('Item', {
 	image: null,
 	dropped: false,
 	year: "",
+	__v: 0,
 
 	// constructor
 	initialize: function (){}

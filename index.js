@@ -16,6 +16,9 @@ var init = function()
 		_config = config;
 		Winston.info('Started with the following config', _config);
 
+		// init lib
+		Item.init(_config.mongo);
+
 		initRestify();
 	});
 };
