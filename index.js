@@ -16,6 +16,9 @@ var init = function()
 		_config = config;
 		Winston.info('Started with the following config', _config);
 
+		// init lib
+		Item.init(_config.mongo);
+
 		initRestify();
 	});
 };
@@ -31,6 +34,8 @@ var initRestify = function()
 
 	server.on("uncaughtException", onUncaughtException);
 	server.use(mainHandler);
+
+	server.post("/films", createFilm);
 
 	server.listen(_config.port, serverUpHandler);
 };
@@ -57,6 +62,52 @@ var serverUpHandler = function()
 };
 
 
+// ================== //
+// SERVER FUNCTIONS:  //
+// ================== //
+
+
+var createFilm = function(request, response, next)
+{
+	
+	validateBody(request.body, 'film', function(err, body)
+	{
+		if(err)
+		{
+			Winston.error(err);
+			return response.send(400, err.message);
+		}
+
+		Item.create(body, 'film', function(err)
+		{
+			if(err)
+			{
+				Winston.error(err);
+				return response.send(err);
+			}
+
+			response.send(201);
+		});
+	});
+	next();
+};
+
+
+// ================== //
+// HELPER FUNCTIONS:  //
+// ================== //
+
+
+var validateBody = function(obj, schema, callback)
+{
+	var validation = Joi.validate(obj, Schema(schema));
+	if(validation.error)
+	{
+		return callback(validation.error, validation.value);
+	}
+	callback(null, validation.value);
+};
+
 
 // ================== //
 // INIT:              //
@@ -65,7 +116,12 @@ var serverUpHandler = function()
 
 var _config;
 var Config  = require("./lib/config.js");
+var Joi     = require('joi');
 var Restify = require('restify');
 var Winston = require('./lib/log.js')("goal-items");
+
+// INIT libs & schema's
+var Item = require('./lib/item.js');
+var Schema = require('./schema/item.js').schema;
 
 init();
