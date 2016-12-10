@@ -75,7 +75,7 @@ var createFilm = function(request, response, next)
 		if(err)
 		{
 			Winston.error(err);
-			return response.send(err);
+			return response.send(400, err.message);
 		}
 
 		Item.create(body, 'film', function(err)
@@ -86,7 +86,7 @@ var createFilm = function(request, response, next)
 				return response.send(err);
 			}
 
-			response.send(200);
+			response.send(201);
 		});
 	});
 	next();
