@@ -1,0 +1,23 @@
+{
+  "name": "goal-items",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dreaganluna/goal-items.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dreaganluna/goal-items/issues"
+  },
+  "homepage": "https://github.com/dreaganluna/goal-items#readme",
+  "dependencies": {
+    "mongodb": "^2.2.14",
+    "winston": "^2.3.0"
+  }
+}
