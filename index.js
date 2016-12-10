@@ -32,6 +32,8 @@ var initRestify = function()
 	server.on("uncaughtException", onUncaughtException);
 	server.use(mainHandler);
 
+	server.post("/films", createFilm);
+
 	server.listen(_config.port, serverUpHandler);
 };
 
@@ -57,6 +59,43 @@ var serverUpHandler = function()
 };
 
 
+// ================== //
+// SERVER FUNCTIONS:  //
+// ================== //
+
+
+var createFilm = function(request, response, next)
+{
+	validateBody(request.body, 'film', function(err, body)
+	{
+		if(err)
+		{
+			Winston.error(err);
+			return response.send(err);
+		}
+
+		Winston.verbose(JSON.stringify(body));
+		response.send(200);
+	});
+	next();
+};
+
+
+// ================== //
+// HELPER FUNCTIONS:  //
+// ================== //
+
+
+var validateBody = function(obj, schema, callback)
+{
+	var validation = Joi.validate(obj, Schema(schema));
+	if(validation.error)
+	{
+		return callback(validation.error, validation.value);
+	}
+	callback(null, validation.value);
+};
+
 
 // ================== //
 // INIT:              //
@@ -65,7 +104,11 @@ var serverUpHandler = function()
 
 var _config;
 var Config  = require("./lib/config.js");
+var Joi     = require('joi');
 var Restify = require('restify');
 var Winston = require('./lib/log.js')("goal-items");
+
+// INIT classes & schema's
+var Schema = require('./schema/item.js').schema;
 
 init();
