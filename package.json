@@ -19,6 +19,7 @@
   "dependencies": {
     "joi": "^10.0.5",
     "mongodb": "^2.2.14",
+    "node-class": "^0.3.12",
     "restify": "^4.3.0",
     "winston": "^2.3.0"
   }

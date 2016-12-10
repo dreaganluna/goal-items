@@ -66,6 +66,7 @@ var serverUpHandler = function()
 
 var createFilm = function(request, response, next)
 {
+	
 	validateBody(request.body, 'film', function(err, body)
 	{
 		if(err)
@@ -74,8 +75,16 @@ var createFilm = function(request, response, next)
 			return response.send(err);
 		}
 
-		Winston.verbose(JSON.stringify(body));
-		response.send(200);
+		Item.create(body, 'film', function(err)
+		{
+			if(err)
+			{
+				Winston.error(err);
+				return response.send(err);
+			}
+
+			response.send(200);
+		});
 	});
 	next();
 };
@@ -108,7 +117,8 @@ var Joi     = require('joi');
 var Restify = require('restify');
 var Winston = require('./lib/log.js')("goal-items");
 
-// INIT classes & schema's
+// INIT libs & schema's
+var Item = require('./lib/item.js');
 var Schema = require('./schema/item.js').schema;
 
 init();
