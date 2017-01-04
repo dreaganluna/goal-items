@@ -94,6 +94,22 @@ var createFilm = function(request, response, next)
 };
 
 
+var getFilm = function(request, response, next)
+{
+	Item.get(request.params.id, function(err, item)
+	{
+		if(err)
+		{
+			Winston.error(err);
+			return response.send(err);
+		}
+		
+		return response.send(item);
+	});
+	next();
+};
+
+
 // ================== //
 // HELPER FUNCTIONS:  //
 // ================== //
