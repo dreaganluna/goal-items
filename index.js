@@ -136,7 +136,16 @@ var getFilm = function(request, response, next)
 
 var getFilms = function(request, response, next)
 {
-	return response.send(200);
+	Item.getAll("film", function(err, items)
+	{
+		if(err)
+		{
+			Winston.error(err);
+			return response.send(err);
+		}
+		
+		return response.send(200);
+	});
 	next();
 };
 
