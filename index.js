@@ -143,8 +143,8 @@ var getFilms = function(request, response, next)
 			Winston.error(err);
 			return response.send(err);
 		}
-		
-		return response.send(200);
+
+		return response.send(items);
 	});
 	next();
 };
