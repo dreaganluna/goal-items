@@ -17,9 +17,18 @@ var init = function()
 		Winston.info('Started with the following config', _config);
 
 		// init lib
-		Item.init(_config.mongo);
-
-		initRestify();
+		Item.init(_config.mongo, function(err)
+		{
+			if(err)
+			{
+				Winston.error(err);
+				process.exit();
+			}
+			else
+			{
+				initRestify();
+			}
+		});
 	});
 };
 
@@ -35,6 +44,7 @@ var initRestify = function()
 	server.on("uncaughtException", onUncaughtException);
 	server.use(mainHandler);
 
+	server.get("/films/:id", getFilm);
 	server.post("/films", createFilm);
 
 	server.listen(_config.port, serverUpHandler);
@@ -88,6 +98,36 @@ var createFilm = function(request, response, next)
 
 			response.send(201);
 		});
+	});
+	next();
+};
+
+
+var getFilm = function(request, response, next)
+{
+	Item.get("film", request.params.id, function(err, item)
+	{
+		if(err)
+		{
+			if(err.message === "Item not found.")
+			{
+				// 404 error
+				return response.send(404);
+			}
+			else
+			{
+				Winston.error(err);
+				return response.send(err);
+			}
+		}
+
+		// remove versioning property
+		var version = item.__v;
+		delete item.__v;
+
+		// return result
+		response.header("ETag", version);
+		return response.send(item);
 	});
 	next();
 };
