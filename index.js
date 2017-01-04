@@ -105,7 +105,7 @@ var createFilm = function(request, response, next)
 
 var getFilm = function(request, response, next)
 {
-	Item.get(request.params.id, function(err, item)
+	Item.get("film", request.params.id, function(err, item)
 	{
 		if(err)
 		{
@@ -120,8 +120,6 @@ var getFilm = function(request, response, next)
 				return response.send(err);
 			}
 		}
-		
-		Winston.verbose(item);
 
 		return response.send(item);
 	});
