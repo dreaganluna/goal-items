@@ -121,6 +121,12 @@ var getFilm = function(request, response, next)
 			}
 		}
 
+		// remove versioning property
+		var version = item.__v;
+		delete item.__v;
+
+		// return result
+		response.header("ETag", version);
 		return response.send(item);
 	});
 	next();
