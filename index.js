@@ -17,9 +17,18 @@ var init = function()
 		Winston.info('Started with the following config', _config);
 
 		// init lib
-		Item.init(_config.mongo);
-
-		initRestify();
+		Item.init(_config.mongo, function(err)
+		{
+			if(err)
+			{
+				Winston.error(err);
+				process.exit();
+			}
+			else
+			{
+				initRestify();
+			}
+		});
 	});
 };
 
@@ -100,10 +109,20 @@ var getFilm = function(request, response, next)
 	{
 		if(err)
 		{
-			Winston.error(err);
-			return response.send(err);
+			if(err.message === "Item not found.")
+			{
+				// 404 error
+				return response.send(404);
+			}
+			else
+			{
+				Winston.error(err);
+				return response.send(err);
+			}
 		}
 		
+		Winston.verbose(item);
+
 		return response.send(item);
 	});
 	next();
