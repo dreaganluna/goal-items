@@ -44,6 +44,7 @@ var initRestify = function()
 	server.on("uncaughtException", onUncaughtException);
 	server.use(mainHandler);
 
+	server.get("/films", getFilms);
 	server.get("/films/:id", getFilm);
 	server.post("/films", createFilm);
 
@@ -128,6 +129,22 @@ var getFilm = function(request, response, next)
 		// return result
 		response.header("ETag", version);
 		return response.send(item);
+	});
+	next();
+};
+
+
+var getFilms = function(request, response, next)
+{
+	Item.getAll("film", function(err, items)
+	{
+		if(err)
+		{
+			Winston.error(err);
+			return response.send(err);
+		}
+
+		return response.send(items);
 	});
 	next();
 };
