@@ -35,6 +35,7 @@ var initRestify = function()
 	server.on("uncaughtException", onUncaughtException);
 	server.use(mainHandler);
 
+	server.get("/films/:id", getFilm);
 	server.post("/films", createFilm);
 
 	server.listen(_config.port, serverUpHandler);
