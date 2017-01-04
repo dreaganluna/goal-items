@@ -17,7 +17,6 @@ exports.Film = Class('Film', {
 	// constructor
 	initialize: function()
 	{
-		console.log(this);
 		this.__parent();
 		return this;
 	}
